@@ -1,7 +1,11 @@
 package com.brew.projecteye;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -11,8 +15,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.brew.projecteye.receiver.LockScreenReceiver;
+
+import java.io.FileInputStream;
 
 public class LockScreenAppActivity extends Activity implements GestureDetector.OnGestureListener {
     private GestureDetector gDetector;
@@ -20,6 +29,9 @@ public class LockScreenAppActivity extends Activity implements GestureDetector.O
     private static final int SWIPE_MAX_OFF_PATH = 200;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
+    /*
+      * TODO: Delete old files
+      */
     public void onCreate(Bundle savedInstanceState) {
         Log.d("Time", "Activity started top");
         super.onCreate(savedInstanceState);
@@ -27,8 +39,41 @@ public class LockScreenAppActivity extends Activity implements GestureDetector.O
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
+        Long currentVersion = LockScreenReceiver.currentVersion;
+        if(currentVersion == -1) {
+            SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            currentVersion = settings.getLong(Constants.LATEST_VERSION_KEY, -1);
+        }
+
+        Bitmap bm = getImageBitmap(this, currentVersion.toString());
+        if (bm == null) {
+            new DownloadImageTask(this).execute(true);
+        }
+        ImageView imageView = (ImageView) findViewById(R.id.lockScreenImage);
+        imageView.setImageBitmap(bm);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        Button closeButton = (Button) findViewById(R.id.closeImageButton);
+        closeButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                closeScreen();
+                return true;
+            }
+        });
         Log.d("Time", "Activity started");
         gDetector = new GestureDetector(this);
+    }
+
+    public Bitmap getImageBitmap(Context context, String name){
+        try{
+            FileInputStream fis = context.openFileInput(name);
+            Bitmap b = BitmapFactory.decodeStream(fis);
+            fis.close();
+            return b;
+        }
+        catch(Exception e){
+        }
+        return null;
     }
 
     @Override
@@ -36,7 +81,7 @@ public class LockScreenAppActivity extends Activity implements GestureDetector.O
         return gDetector.onTouchEvent(me);
     }
 
-    private void onSwipe() {
+    private void closeScreen() {
         LockScreenService.ScreenShown = false;
         finish();
     }
@@ -81,12 +126,12 @@ public class LockScreenAppActivity extends Activity implements GestureDetector.O
             // Left swipe
             if (diff > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                LockScreenAppActivity.this.onSwipe();
+                LockScreenAppActivity.this.closeScreen();
             }
             // Right swipe
             else if (-diff > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                LockScreenAppActivity.this.onSwipe();
+                LockScreenAppActivity.this.closeScreen();
             }
         } catch (Exception e) {
             Log.e("Home", "Error on gestures");

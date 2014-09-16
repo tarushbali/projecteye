@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.brew.projecteye.receiver.LockScreenReceiver;
