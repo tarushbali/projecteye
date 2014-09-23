@@ -41,8 +41,7 @@ public class LockScreenAppActivity extends Activity implements GestureDetector.O
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         tm.listen(mCallStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
         Long currentVersion = LockScreenReceiver.currentVersion;
