@@ -1,10 +1,10 @@
-package com.brew.projecteye.receiver;
+package com.brew.e.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.brew.projecteye.LockScreenService;
+import com.brew.e.LockScreenService;
 
 /**
  * Created by tbali on 9/15/14.

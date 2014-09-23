@@ -1,4 +1,4 @@
-package com.brew.projecteye;
+package com.brew.e;
 
 /**
  * Created by tbali on 9/13/14.

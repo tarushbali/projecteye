@@ -1,4 +1,4 @@
-package com.brew.projecteye;
+package com.brew.e;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,14 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
-import com.brew.projecteye.receiver.LockScreenReceiver;
+import com.brew.e.receiver.LockScreenReceiver;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStream;

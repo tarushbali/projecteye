@@ -1,17 +1,12 @@
-package com.brew.projecteye;
+package com.brew.e;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
-
-import com.brew.projecteye.receiver.LockScreenReceiver;
 
 public class StartLockScreen extends Activity {
 

@@ -1,4 +1,4 @@
-package com.brew.projecteye;
+package com.brew.e;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -7,11 +7,10 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.brew.projecteye.receiver.LockScreenReceiver;
+import com.brew.e.receiver.LockScreenReceiver;
 
 public class LockScreenService extends Service{
     BroadcastReceiver mReceiver;
-    public static boolean ScreenShown = false;
 
     @Override
     public IBinder onBind(Intent intent) {
