@@ -14,14 +14,51 @@
     <Button
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/closeImageButton"
+        android:id="@+id/dismissImageButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/ic_action_cancel"/>
+        android:background="@drawable/ic_action_down_arrow"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/likeButtonAndNumberView"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/dismissImageButton"
+        android:layout_marginRight="10dp"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/numberOfLikes"
+            android:gravity="center"
+            android:text="10"
+            android:visibility="invisible"
+            android:textSize="16sp"
+            />
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:id="@+id/likeButton"
+            android:background="@drawable/ic_action_up_arrow"/>
+    </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="11dp"
+        android:textSize="16sp"
+        android:id="@+id/authorDisplay"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text="23"
         android:id="@+id/timeDisplay"
         android:textColor="#ffffff"
         android:layout_alignParentTop="true"

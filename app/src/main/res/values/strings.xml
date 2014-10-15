@@ -2,10 +2,10 @@
 <resources>
     <string name="hello">Hello World, LockScreenAppActivity!</string>
     <string name="app_name">Foci</string>
-    <string name="unloack">Unlock</string>
     <string name="pref_switch_lockscreen_overlay_title">Lockscreen</string>
     <string name="pref_switch_lockscreen_show_clock">Show Clock</string>
-    <string name="pref_sleep_time">Locking Time</string>
+    <string name="pref_show_overlay_title">Show Overlay</string>
+    <string name="pref_show_overlay_subtitle">%s after screen locks</string>
     <color name="black">#000000</color>
     <string name="action_settings">Settings</string>
 </resources>

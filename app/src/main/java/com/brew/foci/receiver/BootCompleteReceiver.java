@@ -1,10 +1,10 @@
-package com.brew.e.receiver;
+package com.brew.foci.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.brew.e.LockScreenService;
+import com.brew.foci.LockScreenService;
 
 /**
  * Created by tbali on 9/15/14.

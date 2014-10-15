@@ -1,4 +1,4 @@
-package com.brew.e.receiver;
+package com.brew.foci.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,26 +7,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.brew.e.DownloadImageTask;
-import com.brew.e.LockScreenAppActivity;
-import com.brew.e.Constants;
+import com.brew.foci.Constants;
+import com.brew.foci.downloaders.DownloadImageTask;
+import com.brew.foci.downloaders.DownloadNumLikesTask;
+import com.brew.foci.LockScreenAppActivity;
 
 public class LockScreenReceiver extends BroadcastReceiver {
-    public static Long currentVersion = -1l;
     Handler handler = new Handler();
     Runnable currentRunnable = null;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
         new DownloadImageTask(context).execute(false);
+        new DownloadNumLikesTask(context).execute();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        if (sharedPref.getBoolean("pref_overlay_switch", false)) {
+        if (sharedPref.getBoolean("pref_overlay_switch", false) && !Constants.isImageDismissed(context, Constants.getLatestImageVersion(context))) {
             if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 if(currentRunnable == null) {
                     currentRunnable = new LockScreenStarter(context);
-                    int sleepTime = sharedPref.getInt("pref_sleep_time", 5) * 1000;
+                    int sleepTime = Integer.parseInt(sharedPref.getString("pref_overlay_sleep_time", Constants.DEFAULT_OVERLAY_SLEEP_TIME)) * 1000;
                     handler.postDelayed(currentRunnable, sleepTime);
                 }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {

@@ -8,10 +8,11 @@
         android:key="pref_overlay_show_clock"
         android:title="@string/pref_switch_lockscreen_show_clock"
         android:defaultValue="true" />
-    <com.brew.e.NumberPickerPreference
-        android:key="pref_sleep_time"
-        android:title="@string/pref_sleep_time"
-        android:defaultValue="5"
-        android:persistent="true"
-        />
+    <ListPreference
+        android:title="@string/pref_show_overlay_title"
+        android:summary="@string/pref_show_overlay_subtitle"
+        android:key="pref_overlay_sleep_time"
+        android:defaultValue="60"
+        android:entries="@array/overlayPreferenceKeys"
+        android:entryValues="@array/overlayPreferenceValues" />
 </PreferenceScreen>

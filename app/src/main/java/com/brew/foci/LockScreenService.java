@@ -1,13 +1,12 @@
-package com.brew.e;
+package com.brew.foci;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.util.Log;
 
-import com.brew.e.receiver.LockScreenReceiver;
+import com.brew.foci.receiver.LockScreenReceiver;
 
 public class LockScreenService extends Service{
     BroadcastReceiver mReceiver;
@@ -23,7 +22,6 @@ public class LockScreenService extends Service{
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.setPriority(999);
         mReceiver = new LockScreenReceiver();
-        Log.d("Time", "Register receiver");
         registerReceiver(mReceiver, filter);
         super.onCreate();
     }
@@ -31,7 +29,6 @@ public class LockScreenService extends Service{
     @Override
     public void onDestroy() {
         unregisterReceiver(mReceiver);
-        Log.d("Time", "Unregister receiver");
         super.onDestroy();
     }
 }

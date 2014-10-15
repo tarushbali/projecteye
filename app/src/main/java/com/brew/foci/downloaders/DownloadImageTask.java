@@ -1,16 +1,18 @@
-package com.brew.e;
+package com.brew.foci.downloaders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
-import com.brew.e.receiver.LockScreenReceiver;
+import com.brew.foci.Constants;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -23,6 +25,7 @@ import java.io.InputStreamReader;
  */
 public class DownloadImageTask extends AsyncTask<Boolean, Integer, String> {
     private Context mContext;
+    private static Long THRESHOLD_TIME_FOR_DELETION = 24*60*60*1000l; // 24 hours in millis
 
     public DownloadImageTask(Context context) {
         mContext = context;
@@ -46,6 +49,7 @@ public class DownloadImageTask extends AsyncTask<Boolean, Integer, String> {
             }
             JSONObject jObject = new JSONObject(versionResponse);
             String versionString = jObject.getString("version");
+            String photographerName = jObject.getString("photographer");
             Long newestVersion = Long.parseLong(versionString);
             if(!newestVersion.equals(currentVersion) || forceDownload[0]) {
                 HttpGet imageHttpGet = new HttpGet(Constants.SERVER_DOWNLOAD_IMAGE_URL + newestVersion);
@@ -53,10 +57,31 @@ public class DownloadImageTask extends AsyncTask<Boolean, Integer, String> {
                 InputStream imageContent = imageExecute.getEntity().getContent();
                 Bitmap bm = BitmapFactory.decodeStream(imageContent);
                 saveImage(mContext, bm, newestVersion.toString());
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putLong(Constants.LATEST_VERSION_KEY, newestVersion);
-                editor.commit();
-                LockScreenReceiver.currentVersion = newestVersion;
+                Constants.setLatestImageVersion(mContext, newestVersion);
+                Constants.setPhotographerName(mContext, newestVersion, photographerName);
+                String storedFiles = Constants.getStoredFiles(mContext);
+                if(TextUtils.isEmpty(storedFiles)) {
+                    JSONArray jsonStoredFiles = new JSONArray();
+                    jsonStoredFiles.put(newestVersion);
+                    JSONObject jsonStoredFilesObject = new JSONObject();
+                    jsonStoredFilesObject.put("storedFiles", jsonStoredFiles);
+                    Constants.setStoredFiles(mContext, jsonStoredFilesObject.toString());
+                } else {
+                    JSONObject jsonStoredFilesObject = new JSONObject(storedFiles);
+                    JSONArray jsonStoredFiles = jsonStoredFilesObject.getJSONArray("storedFiles");
+                    JSONArray newJsonStoredFiles = new JSONArray();
+                    for(int i = 0 ; i < jsonStoredFiles.length() ; i++) {
+                        Long timestamp = jsonStoredFiles.getLong(i);
+                        if(!timestamp.equals(currentVersion) && timestamp < System.currentTimeMillis() - THRESHOLD_TIME_FOR_DELETION) {
+                            mContext.deleteFile(timestamp.toString());
+                        } else {
+                            newJsonStoredFiles.put(timestamp);
+                        }
+                    }
+                    newJsonStoredFiles.put(newestVersion);
+                    jsonStoredFilesObject.put("storedFiles", newJsonStoredFiles);
+                    Constants.setStoredFiles(mContext, jsonStoredFilesObject.toString());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,9 +91,7 @@ public class DownloadImageTask extends AsyncTask<Boolean, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        //textView.setText(result);
     }
-
 
     public void saveImage(Context context, Bitmap bitmap, String name){
         FileOutputStream out;
